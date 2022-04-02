@@ -19,7 +19,12 @@ const autoprefixer = require("gulp-autoprefixer");
 const uglyfy = require("gulp-uglify");
 const concat = require("gulp-concat");
 const babel = require("gulp-babel");
-
+// const browserify = require("gulp-browserify");
+const babelify = require("babelify");
+const buffer = require("vinyl-buffer");
+const source = require("vinyl-source-stream");
+const connect = require("gulp-connect");
+const browserify = require("browserify");
 // HTML
 const kit = require("gulp-kit");
 const htmlmin = require("gulp-htmlmin");
@@ -68,17 +73,41 @@ function sassTask(done) {
 
 // JavaScript minify and optimization for ES5
 
+// function jsTask(done) {
+//   gulp
+//     .src("./src/js/**/*.js")
+//     .pipe(plumber())
+//     .pipe(sourcemaps.init())
+//     .pipe(
+//       babel({
+//         presets: [["@babel/env"]],
+//       })
+//     )
+//     .pipe(concat("script.js"))
+//     .pipe(uglyfy())
+//     .pipe(
+//       rename(function (path) {
+//         path.basename += ".min";
+//       })
+//     )
+//     .pipe(sourcemaps.write("."))
+//     .pipe(dest("./dist/js"));
+//   done();
+// }
+
 function jsTask(done) {
-  gulp
-    .src("./src/js/**/*.js")
-    .pipe(plumber(plumberErrorHandler))
-    .pipe(sourcemaps.init())
-    .pipe(
-      babel({
-        presets: [["@babel/env", { modules: false }]],
+  return browserify({
+    entries: ["./src/js/controller.js"],
+  })
+    .transform(
+      babelify.configure({
+        presets: ["@babel/preset-env"],
       })
     )
-    .pipe(concat("script.js"))
+    .bundle()
+    .pipe(source("controller.js"))
+    .pipe(buffer())
+    .pipe(sourcemaps.init())
     .pipe(uglyfy())
     .pipe(
       rename(function (path) {
