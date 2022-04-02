@@ -36,7 +36,7 @@ const cache = require("gulp-cache");
 // Files
 filesPath = {
   sass: "./src/sass/**/*.scss",
-  js: "./src/js/**/*.js",
+  js: "./src/js/controller.js",
   images: "./src/assets/**/*.+(png|jpg|gif|svg)",
   html: "./src/html/**/*.kit",
   fonts: "./src/assets/fonts/*",
@@ -97,7 +97,7 @@ function sassTask(done) {
 
 function jsTask(done) {
   return browserify({
-    entries: ["./src/js/controller.js"],
+    entries: [filesPath.js],
   })
     .transform(
       babelify.configure({
