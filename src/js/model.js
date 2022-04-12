@@ -1,11 +1,15 @@
 import { API_URL } from "./config.js";
 import { getJSON } from "./helpers.js";
+import { RES_PER_PAGE } from "./config.js";
 
 export const state = {
   recipe: {},
   search: {
     query: "",
     results: [],
+    // set page = 1 default value
+    page: 1,
+    resultsPerPage: RES_PER_PAGE,
   },
 };
 
@@ -37,7 +41,7 @@ export const loadSerchResults = async function (query) {
     state.search.query = query;
 
     const data = await getJSON(`${API_URL}?search=${query}`);
-    console.log(data);
+    // console.log(data);
 
     state.search.results = data.data.recipes.map((rec) => {
       return {
@@ -51,4 +55,15 @@ export const loadSerchResults = async function (query) {
     console.error(`${err}💥💥💥`);
     throw err;
   }
+};
+
+// set page number to 1, default
+export const getSearchResultsPage = function (page = state.search.page) {
+  // It's important for part where we want to change pages
+  state.search.page = page;
+
+  const start = (page - 1) * state.search.resultsPerPage; // 0
+  const end = page * state.search.resultsPerPage; // 9
+
+  return state.search.results.slice(start, end);
 };

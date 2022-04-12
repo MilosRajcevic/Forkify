@@ -158,7 +158,7 @@ function watch() {
     browser: "chrome",
   });
   gulp.watch(filesPath.sass, sassTask).on("change", browserSync.reload);
-  gulp.watch(filesPath.js, jsTask).on("change", browserSync.reload);
+  gulp.watch("./src/js/**/*.js", jsTask).on("change", browserSync.reload);
   gulp.watch(filesPath.html, kitTask).on("change", browserSync.reload);
   gulp.watch(filesPath.images, imagesTask).on("change", browserSync.reload);
 }
